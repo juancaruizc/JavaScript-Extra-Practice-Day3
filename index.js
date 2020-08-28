@@ -2,9 +2,13 @@
 TASK 1 🚀
 // in your own words explain what a closure is below in comments and then write an example of a closure. Try to make this explaination simple enough to explain to a younger sibling. */
 
+// A closure is a function nested within a function, the nested function is now enclosed in the scope of other function 
 
-
-
+const name = 'juan';
+function returnName () {
+  return name;
+}
+returnName();
 
 
 /*
@@ -20,43 +24,61 @@ function counterMaker() {
     }
   }
 
-
-
-
+  //the variable 'count' is available in the function counterMaker. We use let in this case so it is only available within the statement. If 'var' were to be used then the variable would be available anywhere in the scope. 
 
 
 /*
 TASK 3 🚀
-* The for principles of "this";
+* The four principles of "this";
 * in your own words. explain the four principle for the "this" keyword below.
 *
-* 1. 
-* 2. 
-* 3. 
-* 4. 
+1.  When in the global scope, the value of “this” will be the window/console Object;
+2.  Whenever a preceding dot calls a function, the object before the dot is 'this'.
+3.  When using a constructor function, 'this' refers to the specific instance of the object that is created and returned by the constructor function.
+4.  When using the call or apply method, 'this' is explicitly defined.
 *
 * write out a code example of each explanation above
 */
 
 // Principle 1
 
-// code example for Window Binding
+function nameCaller(name) {
+  console.log(this);
+  return name;
+}
+nameCaller('Juan');
 
 // Principle 2
 
-// code example for Implicit Binding
+const Obj = {
+  greeting: 'Hello',
+  sayHello: function(name) {
+    console.log(`${this.greeting} my name is ${name}`);
+    console.log(this);
+  }
+};
+Obj.sayHello('Juan');
 
 // Principle 3
 
-// code example for New Binding
+function myGreeter(greeter) {
+  this.greeting = 'Hi';
+  this.greeter = greeter;
+  this.speak = function() {
+    console.log(this.greeting + this.greeter);
+    console.log(this);
+  };
+}
+
+const juan = new myGreeter('Juan');
+const sebastian = new myGreeter('Sebastian');
+
+juan.speak();
+sebastian.speak();
 
 // Principle 4
 
-// code example for Explicit Binding
-
-
-
-
+juan.speak.call(sebastian); sebastian.speak.apply(juan);
 
 
 /*
@@ -77,6 +99,26 @@ TASK 4 🚀
   * destroy() // prototype method that returns: `${this.name} was removed from the game.`
 */
 
+function CharacterStats(attributes) {
+  this.healthPoints = attributes.healthPoints;
+  GameObject.call(this, attributes);
+}
+CharacterStats.prototype = Object.create(GameObject.prototype);
+CharacterStats.prototype.takeDamage = function(){
+  return `${this.name} took damage.`;
+}
+const Stick = new CharacterStats({
+  healthPoints: 50,
+  createdAt: 'Yesterday',
+  name: 'Joe',
+  dimensions: {
+    length: 2,
+    width: 1,
+    height:1,
+  }
+})
+console.log(Stick.destroy());
+
 /*
   === CharacterStats ===
   * healthPoints
@@ -84,6 +126,17 @@ TASK 4 🚀
   * should inherit destroy() from GameObject's prototype
 */
 
+function Humanoid(attributes) {
+  this.name = attributes.name;
+  this.team = attributes.team;
+  this.weapons = attributes.weapons;
+  this.language = attributes.language;
+  CharacterStats.call(this, attributes);
+}
+Humanoid.prototype = Object.create(CharacterStats.prototype);
+Humanoid.prototype.greet = function(){
+  return `${this.name} offers a greeting in ${this.language}.`;
+}
 /*
   === Humanoid (Having an appearance or character resembling that of a human.) ===
   * team
@@ -93,7 +146,19 @@ TASK 4 🚀
   * should inherit destroy() from GameObject through CharacterStats
   * should inherit takeDamage() from CharacterStats
 */
- 
+
+function Humanoid(attrs){
+  CharacterStats.call(this,attrs);
+  this.team = attrs.team;
+  this.weapons = attrs.weapons;
+  this.language = attrs.language;
+}
+
+Humanoid.prototype = Object.create(CharacterStats.prototype);
+Humanoid.prototype.greet = function(){
+  return `${this.name} took damage.`;
+}
+
 /*
   * Inheritance chain: GameObject -> CharacterStats -> Humanoid
   * Instances of Humanoid should have all of the same properties as CharacterStats and GameObject.
@@ -102,7 +167,7 @@ TASK 4 🚀
 
 // Test you work by un-commenting these 3 objects and the list of console logs below:
 
-/*
+
   const mage = new Humanoid({
     createdAt: new Date(),
     dimensions: {
@@ -160,11 +225,6 @@ TASK 4 🚀
   console.log(archer.greet()); // Lilith offers a greeting in Elvish.
   console.log(mage.takeDamage()); // Bruce took damage.
   console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
-*/
-
-
-
-
 
 
 /*
